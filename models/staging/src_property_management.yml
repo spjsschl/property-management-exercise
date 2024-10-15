@@ -1,0 +1,52 @@
+
+version: 2
+
+sources:
+  - name: property_management
+    database: Raw
+    schema: property_management
+    freshness:
+      warn_after: { count: 1, period: day }
+      error_after: { count: 2, period: day }
+    tables:
+      - name: properties
+        description: "One row per property"
+        loaded_at_field: uploaded_at
+      - name: leases
+        description: "One row per lease"
+        columns:
+          - name: id
+            description: "Primary key"
+            tests:
+              - unique
+              - not_null
+          - name: unit_id
+            description: "Unit this lease is for"
+            tests:
+              - not_null
+          - name: completed
+            description: "Boolen indicating wether the lease is finished"
+            tests:
+              - not_null
+        loaded_at_field: uploaded_at
+      - name: units
+        description: "Units that can be individually rented"
+        columns:
+          - name: id
+            description: "Primary key"
+            tests:
+              - unique
+              - not_null
+          - name: bedrooms
+            description: "Number of bedrooms"
+          - name: bathroom"
+            description: "Number of bathrooms"
+          - name: property_id
+            description: "Property this unit belongs to"
+            tests:
+                - relationships:
+                    to: ref('src_properties')
+                    field: id
+        loaded_at_field: uploaded_at
+      - name: rental_applications
+        loaded_at_field: uploaded_at
