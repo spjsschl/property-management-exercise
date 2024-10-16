@@ -9,6 +9,6 @@ with
         where units.status in ('occupied', 'rented')
         group by properties.property_id, properties.name
     )
-
+-- bogus change
 select *
 from total_rent_income
